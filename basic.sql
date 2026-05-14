@@ -158,4 +158,87 @@ VALUES
 
 SELECT DISTINCT ON (country) * FROM students;
 -- upper and lower functions
-SELECT upper(first_name), lower(last_name) FROM students;
+SELECT UPPER(first_name), LOWER(last_name) FROM students;
+
+
+-- ============================================================
+-- DDL, DML, DCL, TCL, QL (DQL) EXAMPLES
+-- ============================================================
+
+-- -------------------------
+-- 1) DDL: Data Definition Language
+-- -------------------------
+
+CREATE TABLE IF NOT EXISTS departments (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE students
+ADD COLUMN IF NOT EXISTS department_id INT;
+
+ALTER TABLE students
+ADD CONSTRAINT students_department_fk
+FOREIGN KEY (department_id)
+REFERENCES departments(id);
+
+-- -------------------------
+-- 2) DML: Data Manipulation Language
+-- -------------------------
+
+INSERT INTO departments (name)
+VALUES ('Computer Science'), ('Software Engineering')
+ON CONFLICT (name) DO NOTHING;
+
+UPDATE students
+SET department_id = d.id
+FROM departments d
+WHERE students.department = d.name;
+
+DELETE FROM students
+WHERE email IS NULL;
+
+-- -------------------------
+-- 3) DCL: Data Control Language
+-- -------------------------
+-- Run these with a privileged role/user.
+
+CREATE ROLE read_only_user LOGIN PASSWORD 'change_me_123';
+GRANT CONNECT ON DATABASE school TO read_only_user;
+GRANT USAGE ON SCHEMA public TO read_only_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO read_only_user;
+REVOKE INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public FROM read_only_user;
+
+-- -------------------------
+-- 4) TCL: Transaction Control Language
+-- -------------------------
+
+BEGIN;
+
+INSERT INTO students (first_name, last_name, email, age)
+VALUES ('Test', 'User', 'test.user@example.com', 30);
+
+SAVEPOINT sp_after_insert;
+
+UPDATE students
+SET age = 31
+WHERE email = 'test.user@example.com';
+
+ROLLBACK TO SAVEPOINT sp_after_insert;
+COMMIT;
+
+-- -------------------------
+-- 5) QL / DQL: Query Language
+-- -------------------------
+
+SELECT s.first_name, s.last_name, s.email, d.name AS department_name
+FROM students s
+LEFT JOIN departments d ON d.id = s.department_id
+ORDER BY s.first_name;
+
+SELECT city, COUNT(*) AS total_students
+FROM students
+GROUP BY city
+HAVING COUNT(*) >= 1
+ORDER BY total_students DESC;
