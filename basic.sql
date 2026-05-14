@@ -157,23 +157,12 @@ VALUES
 -- SELECT DISTINCT country FROM students;
 
 SELECT DISTINCT ON (country) * FROM students;
+SELECT * FROM students;
+
 -- upper and lower functions
 SELECT UPPER(first_name), LOWER(last_name) FROM students;
+SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM students;
 
-
--- ============================================================
--- DDL, DML, DCL, TCL, QL (DQL) EXAMPLES
--- ============================================================
-
--- -------------------------
--- 1) DDL: Data Definition Language
--- -------------------------
-
-CREATE TABLE IF NOT EXISTS departments (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 
 ALTER TABLE students
 ADD COLUMN IF NOT EXISTS department_id INT;
