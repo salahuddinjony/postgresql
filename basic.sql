@@ -271,9 +271,12 @@ ORDER BY total_students DESC;
 --inner join 
 SELECT s.first_name, s.last_name, d.name AS department_name
 FROM students s
-JOIN departments d ON s.department_id = d.id
+-- JOIN departments d ON s.department_id = d.id
+JOIN departments d using (department_id)
 WHERE s.age > 22
 ORDER BY s.first_name;
+
+
 
 --left join , right join, full outer join
 SELECT s.first_name, s.last_name, d.name AS department_name
@@ -292,5 +295,20 @@ ORDER BY s.first_name;
 SELECT s.first_name, s.last_name, d.name AS department_name
 FROM students s
 FULL OUTER JOIN departments d ON s.department_id = d.id
+WHERE s.age > 22
+ORDER BY s.first_name;
+
+
+--cross join
+SELECT s.first_name, s.last_name, d.name AS department_name
+FROM students s
+CROSS JOIN departments d
+WHERE s.age > 22
+ORDER BY s.first_name;
+
+--natural join-> constraint must have a common column name in both tables, and it will automatically join the tables based on the common column name. In this case, it will join the students and departments tables based on the department_id column, and it will return all records from both tables where the department_id matches.
+SELECT s.first_name, s.last_name, d.name AS department_name
+FROM students s
+NATURAL JOIN departments d
 WHERE s.age > 22
 ORDER BY s.first_name;
