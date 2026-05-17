@@ -231,3 +231,30 @@ FROM students
 GROUP BY city
 HAVING COUNT(*) >= 1
 ORDER BY total_students DESC;
+
+UPDATE students
+SET department_id = 0000, created_at = CURRENT_TIMESTAMP
+WHERE department_id IS NULL;
+
+select * from students ;
+
+SHOW timezone;
+select now();
+select now()::time;
+select now()::date;
+select to_char(now(), 'YYYY-MM-DD HH24:MI:SS') AS formatted_now;
+select current_date - INTERVAL '7 days' AS one_week_ago;
+
+SELECT * ,age(CURRENT_DATE, date_of_birth) from students; 
+SELECT *,
+       CONCAT(
+           EXTRACT(YEAR FROM age(CURRENT_DATE, date_of_birth)),
+           ' years, ',
+           EXTRACT(MONTH FROM age(CURRENT_DATE, date_of_birth)),
+           ' months, ',
+           EXTRACT(DAY FROM age(CURRENT_DATE, date_of_birth)),
+           ' days'
+       ) AS age
+FROM students;
+alter table students
+drop column age;
