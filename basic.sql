@@ -258,3 +258,39 @@ SELECT *,
 FROM students;
 alter table students
 drop column age;
+
+SELECT country,
+       COUNT(*) AS total_students
+FROM students
+GROUP BY country
+HAVING COUNT(*) >= 1
+ORDER BY total_students DESC;
+
+
+
+--inner join 
+SELECT s.first_name, s.last_name, d.name AS department_name
+FROM students s
+JOIN departments d ON s.department_id = d.id
+WHERE s.age > 22
+ORDER BY s.first_name;
+
+--left join , right join, full outer join
+SELECT s.first_name, s.last_name, d.name AS department_name
+FROM students s
+LEFT JOIN departments d ON s.department_id = d.id
+WHERE s.age > 22
+ORDER BY s.first_name;
+
+SELECT s.first_name, s.last_name, d.name AS department_name
+FROM students s
+RIGHT JOIN departments d ON s.department_id = d.id
+WHERE s.age > 22
+ORDER BY s.first_name;  
+
+--full outer join means it will return all records from both tables, and where there is no match, it will return NULL for the columns of the table that does not have a match. In this case, it will return all students and all departments, and if a student does not belong to any department, the department_name will be NULL, and if a department does not have any students, the first_name and last_name will be NULL.
+SELECT s.first_name, s.last_name, d.name AS department_name
+FROM students s
+FULL OUTER JOIN departments d ON s.department_id = d.id
+WHERE s.age > 22
+ORDER BY s.first_name;
